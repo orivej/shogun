@@ -12,11 +12,14 @@
 #ifndef _DYNAMIC_OBJECT_ARRAY_H_
 #define _DYNAMIC_OBJECT_ARRAY_H_
 
+#include <type_traits>
+
 #include <shogun/lib/config.h>
 
 #include <shogun/base/SGObject.h>
 #include <shogun/base/DynArray.h>
 #include <shogun/base/Parameter.h>
+#include <shogun/io/Serializable.h>
 
 namespace shogun
 {
@@ -273,6 +276,17 @@ class CDynamicObjectArray : public CSGObject
 			bool success=m_array.insert_element(e, index);
 			if (success)
 				SG_REF(e);
+
+			return success;
+		}
+
+		template <typename T, typename T2 = typename std::enable_if<!std::is_base_of<CSGObject, typename std::remove_pointer<T>::type>::value, T>::type>
+		inline bool append_element(T e, const char* name="")
+		{
+			auto serialized_element = new CSerializable<T>(e, name);
+			bool success = m_array.append_element(serialized_element);
+			if (success)
+				SG_REF(serialized_element);
 
 			return success;
 		}
