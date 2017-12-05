@@ -51,12 +51,14 @@ FOREACH(META_EXAMPLE ${META_EXAMPLES})
 	LIST(APPEND AVAILABLE_INTERFACES INTERFACE_SCALA)
 
 	# Set generate.py flags
+	SET(PARSER_FILES_DIR ${CMAKE_CURRENT_BINARY_DIR}/parser_files/${EXAMPLE_NAME_WITH_DIR})
+	FILE(MAKE_DIRECTORY ${PARSER_FILES_DIR})
 	SET(GENERATOR_FLAGS
 		-i ${META_EXAMPLE}
 		-o ${CMAKE_CURRENT_BINARY_DIR}
 		-t ${CMAKE_CURRENT_SOURCE_DIR}/generator/targets
 		-g ${CTAGS_FILE}
-		--parser_files_dir=${CMAKE_CURRENT_BINARY_DIR}/parser_files)
+		--parser_files_dir=${PARSER_FILES_DIR})
 
 	# Enable variable storing only if we have enabled testing
 	IF(ENABLE_TESTING)
